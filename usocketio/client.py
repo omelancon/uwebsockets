@@ -95,10 +95,9 @@ def connect(uri, query=""):
 
     # Start a connection, which will give us an SID to use to upgrade
     # the websockets connection
-    if path.protocol == 'http':
-        packets = _connect_http(uri.hostname, uri.port, path)
-    else:
-        packets = _connect_https(uri.hostname, uri.port, path)
+    do_connect = _connect_http if path.protocol == 'http' else _connect_https
+    
+    packets = do_connect(uri.hostname, uri.port, path)
 
     # The first packet should open the connection,
     # following packets might be initialisation messages for us
@@ -133,7 +132,7 @@ def connect(uri, query=""):
     socketio._send_packet(PACKET_PING, 'probe')
 
     # Send a follow-up poll
-    _connect_http(uri.hostname, uri.port, path + '&transport=polling')
+    do_connect(uri.hostname, uri.port, path + '&transport=polling')
 
     # We should receive an answer to our probe
     packet = socketio._recv()

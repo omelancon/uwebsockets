@@ -23,9 +23,6 @@ class SocketIO:
         # Interval handlers [(interval, handler), ...]
         self._interval_handlers = []
 
-        # Register a ping event
-        self.at_interval(params['pingInterval'] // 1000)(self.ping)
-
     def __enter__(self):
         return self
 
@@ -123,12 +120,6 @@ class SocketIO:
     def _send_message(self, message_type, data=None):
         self._send_packet(PACKET_MESSAGE, '{}{}'.format(message_type,
                                                         json.dumps(data)))
-
-    def ping(self):
-        if __debug__:
-            LOGGER.debug("> ping")
-
-        self._send_packet(PACKET_PING)
 
     def _recv(self):
         """Receive a packet."""

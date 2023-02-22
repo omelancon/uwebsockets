@@ -24,7 +24,7 @@ MESSAGE_BINARY_ACK = const(6)
 
 def decode_packet(buf):
     if isinstance(buf, str) and buf[0] == 'b':
-        # FIXME: implement base64 protocol
+        # FIXME: implement base64 protocol with \x1e separator
         raise NotImplementedError()
 
     return int(buf[0]), buf[1:]
