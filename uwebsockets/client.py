@@ -45,7 +45,7 @@ def connect(uri):
                                     for _ in range(16)))[:-1]
 
     send_header(b'GET %s HTTP/1.1', uri.path or '/')
-    send_header(b'Host: %s:%s', uri.hostname, uri.port)
+    send_header(b'Host: %s', uri.hostname)
     send_header(b'Connection: Upgrade')
     send_header(b'Upgrade: websocket')
     send_header(b'Sec-WebSocket-Key: %s', key)

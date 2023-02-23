@@ -33,7 +33,7 @@ def _connect(sock, hostname, port, path):
         sock.write(header % args + '\r\n')
 
     send_header(b'GET %s HTTP/1.1', path)
-    send_header(b'Host: %s:%s', hostname, port)
+    send_header(b'Host: %s', hostname)
     send_header(b'')
 
     header = sock.readline()[:-2]
@@ -49,7 +49,7 @@ def _connect(sock, hostname, port, path):
         header, value = header.split(b': ')
         header = header.lower()
         if header == b'content-type':
-            assert value == b'application/octet-stream'
+            assert value == b'text/plain; charset=UTF-8'
         elif header == b'content-length':
             length = int(value)
 
@@ -72,14 +72,15 @@ def _connect_http(hostname, port, path):
 
 def _connect_https(hostname, port, path):
     """Stage 1 do the HTTPS connection to get our SID"""
+    # FIXME: does not work on esp32 (not enough memory)
     try:
         sock = socket.socket()
         addr = socket.getaddrinfo(hostname, port)
+        sock.connect(addr[0][4])
         ssock = ssl.wrap_socket(sock)
-        ssock.connect(addr[0][4])
         return _connect(ssock, hostname, port, path)
     finally:
-        ssock.close()
+        sock.close()
 
 
 def connect(uri, query=""):
@@ -95,7 +96,7 @@ def connect(uri, query=""):
 
     # Start a connection, which will give us an SID to use to upgrade
     # the websockets connection
-    do_connect = _connect_http if path.protocol == 'http' else _connect_https
+    do_connect = _connect_http if uri.protocol == 'http' else _connect_https
     
     packets = do_connect(uri.hostname, uri.port, path)
 
