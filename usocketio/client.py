@@ -2,7 +2,7 @@
 Micropython Socket.IO client.
 """
 
-import logging
+import ulogging as logging
 import ure as re
 import ujson as json
 import ussl as ssl

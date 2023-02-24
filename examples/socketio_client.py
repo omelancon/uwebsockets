@@ -1,4 +1,4 @@
-import logging
+import ulogging as logging
 
 import usocketio.client
 

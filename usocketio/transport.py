@@ -1,6 +1,6 @@
 """SocketIO transport."""
 
-import logging
+import ulogging as logging
 import ujson as json
 import usocket as socket
 
