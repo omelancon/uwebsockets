@@ -147,6 +147,7 @@ class SocketIO:
                 LOGGER.debug("Registered %s to handle %s", func, event)
 
             self._event_handlers.setdefault(event, []).append(func)
+            return func
 
         return inner
 
